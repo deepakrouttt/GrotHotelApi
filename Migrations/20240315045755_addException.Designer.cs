@@ -4,6 +4,7 @@ using GrotHotelApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GrotHotelApi.Migrations
 {
     [DbContext(typeof(GrotHotelApiDbContext))]
-    partial class GrotHotelApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240315045755_addException")]
+    partial class addException
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,11 +126,11 @@ namespace GrotHotelApi.Migrations
                     b.Property<decimal>("AdultRate")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("DateFrom")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("DateFrom")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime>("DateTo")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("DateTo")
+                        .HasColumnType("date");
 
                     b.Property<decimal>("DoubleRate")
                         .HasColumnType("decimal(18,2)");
@@ -202,7 +205,8 @@ namespace GrotHotelApi.Migrations
 
             modelBuilder.Entity("GrotHotelApi.Models.RoomRate", b =>
                 {
-                    b.Navigation("BlackOutDate");
+                    b.Navigation("BlackOutDate")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

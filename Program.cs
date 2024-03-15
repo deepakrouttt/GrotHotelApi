@@ -1,5 +1,7 @@
 
 using GrotHotelApi.Data;
+using GrotHotelApi.HotelRepository.IServices;
+using GrotHotelApi.HotelRepository.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace GrotHotelApi
@@ -11,11 +13,10 @@ namespace GrotHotelApi
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
             builder.Services.AddDbContext<GrotHotelApiDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")));
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddScoped<IHotelService, HotelService>();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();

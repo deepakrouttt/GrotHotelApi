@@ -248,6 +248,7 @@ C:\Users\s12\OneDrive\Documents\Deepak\.Net\GrotHotelApi\obj\Debug\net8.0\GrotHo
 C:\Users\s12\OneDrive\Documents\Deepak\.Net\GrotHotelApi\obj\Debug\net8.0\GrotHotelApi.csproj.CoreCompileInputs.cache
 C:\Users\s12\OneDrive\Documents\Deepak\.Net\GrotHotelApi\obj\Debug\net8.0\GrotHotelApi.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\s12\OneDrive\Documents\Deepak\.Net\GrotHotelApi\obj\Debug\net8.0\GrotHotelApi.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\s12\OneDrive\Documents\Deepak\.Net\GrotHotelApi\obj\Debug\net8.0\GrotHotelApi.sourcelink.json
 C:\Users\s12\OneDrive\Documents\Deepak\.Net\GrotHotelApi\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\s12\OneDrive\Documents\Deepak\.Net\GrotHotelApi\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\s12\OneDrive\Documents\Deepak\.Net\GrotHotelApi\obj\Debug\net8.0\staticwebassets\msbuild.GrotHotelApi.Microsoft.AspNetCore.StaticWebAssets.props

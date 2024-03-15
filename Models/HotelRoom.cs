@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.SqlTypes;
 
 namespace GrotHotelApi.Models
 {
@@ -20,15 +21,14 @@ namespace GrotHotelApi.Models
     }
     public class RoomRate
     {
-        [Required]
         [Key]
         public int RoomRateId { get; set; }
         [Required]
-        public DateOnly DateFrom { get; set; }
+        public DateTime DateFrom { get; set; }
         [Required]
-        public DateOnly DateTo { get; set; }
+        public DateTime DateTo { get; set; }
 
-        public BlackOutDate BlackOutDate { get; set; }
+        public BlackOutDate? BlackOutDate { get; set; }
         [Required]
         public decimal SingleRate { get; set; }
         [Required]
@@ -39,15 +39,23 @@ namespace GrotHotelApi.Models
         public decimal AdultRate { get; set; }
         [Required]
         public decimal childRate { get; set; }
-        [Required]
+      
         public bool IsException { get; set; }
 
-        public int AdultChildSetting { get; set; }
+        public bool IsExtraAdult { get; set; }
+
+        public bool IsChildAllow { get; set; }
+
+        public bool IsSingleEqualDouble { get; set; }
+
+        public int HotelRoomId { get; set; }
     }
     public class BlackOutDate
     {
         [Key]
         public int Id { get; set; }
-        public List<DateOnly> ListDate { get; set; }
+        public List<DateTime> ListDate { get; set; }
+
+        public int RoomRateId { get; set; }
     }
 }

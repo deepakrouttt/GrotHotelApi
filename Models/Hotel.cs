@@ -19,6 +19,6 @@ namespace GrotHotelApi.Models
         [Required]
         public string Description { get; set; }
        
-        public ICollection<HotelRoom> HotelRooms { get; set; }
+        public ICollection<HotelRoom>? HotelRooms { get; set; }
     }
 }

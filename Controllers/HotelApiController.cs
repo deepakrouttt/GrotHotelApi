@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GrotHotelApi.Data;
 using GrotHotelApi.Models;
+using GrotHotelApi.Migrations;
+using GrotHotelApi.HotelRepository.IServices;
 
 namespace GrotHotelApi.Controllers
 {
@@ -14,26 +16,24 @@ namespace GrotHotelApi.Controllers
     [ApiController]
     public class HotelApiController : ControllerBase
     {
-        private readonly GrotHotelApiDbContext _context;
+        private readonly IHotelService _service;
 
-        public HotelApiController(GrotHotelApiDbContext context)
+        public HotelApiController(IHotelService service)
         {
-            _context = context;
+            _service = service;
         }
 
-        // GET: api/Hotels
-        [HttpGet]
+        [HttpGet("GetHotels")]
         public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
         {
-            var Hotels = await _context.Hotels.Include(m => m.HotelRooms).ToListAsync();
+            var Hotels = await _service.GetHotels();
             return Hotels;
         }
 
-        // GET: api/Hotels/5
-        [HttpGet("{id}")]
+        [HttpGet("GetHotel/{id}")]
         public async Task<ActionResult<Hotel>> GetHotel(int id)
         {
-            var hotel = await _context.Hotels.Include(m => m.HotelRooms).FirstOrDefaultAsync(m => m.HotelId == id);
+            var hotel = await _service.GetHotel(id);
 
             if (hotel == null)
             {
@@ -43,58 +43,101 @@ namespace GrotHotelApi.Controllers
             return hotel;
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutHotel([FromBody] Hotel hotel)
+        [HttpGet("GetRoom/{id}")]
+        public async Task<ActionResult<HotelRoom>> GetRoom(int id)
         {
-            var Updatehotel = await _context.Hotels.Include(m => m.HotelRooms).FirstOrDefaultAsync(m => m.HotelId == hotel.HotelId);
-            Updatehotel.HotelName = hotel.HotelName;
-            Updatehotel.HotelImage = hotel.HotelImage;
-            Updatehotel.Address = hotel.Address;
-            Updatehotel.ChildAgeRange = hotel.ChildAgeRange;
-            Updatehotel.Rating = hotel.Rating;
+            var hotelRoom = await _service.GetRoom(id);
 
-            _context.Hotels.Update(Updatehotel);
-            await _context.SaveChangesAsync();
+            if (hotelRoom == null)
+            {
+                return NotFound();
+            }
+            return hotelRoom;
+        }
+        [HttpGet("GetRate/{id}")]
+        public async Task<ActionResult<RoomRate>> GetRate(int id)
+        {
+            var roomRate = await _service.GetRate(id);
 
-            return NoContent();
+            if (roomRate == null)
+            {
+                return NotFound();
+            }
+            return roomRate;
+        }
+        [HttpPost("addHotel")]
+        public async Task<ActionResult> addHotel([FromBody] Hotel hotel)
+        {
+            var addhotel = await _service.addHotel(hotel);
+            return Ok(addhotel);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Hotel>> PostHotel([FromBody] Hotel hotel)
+        [HttpPost("addRoom")]
+        public async Task<ActionResult> addRoom([FromBody] HotelRoom hotelroom)
         {
-            _context.Hotels.Add(hotel);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetHotel", new { id = hotel.HotelId }, hotel);
+            var hotel = await _service.addRoom(hotelroom);
+            return Ok(hotel);
         }
 
-        [HttpPost("PostRoom")]
-        public async Task<ActionResult<Hotel>> PostRoom([FromBody] HotelRoom hotelroom)
+        [HttpPost("addRate")]
+        public async Task<ActionResult> addRate([FromBody] RoomRate roomRate)
         {
-            var hotel = await _context.Hotels.Include(a => a.HotelRooms).SingleOrDefaultAsync(m => m.HotelId == hotelroom.HotelId);
-            hotel.HotelRooms.Add(hotelroom);
-            await _context.SaveChangesAsync();
-
-            return hotel;
+            var rate = await _service.addRate(roomRate);
+            return Ok(rate);
         }
-        [HttpDelete("{id}")]
+
+
+        [HttpPut("UpdateHotel")]
+        public async Task<IActionResult> UpdateHotel([FromBody] Hotel hotel)
+        {
+            var Updatehotel = await _service.UpdateHotel(hotel);
+            return Ok(Updatehotel);
+        }
+
+        [HttpPut("UpdateRoom")]
+        public async Task<IActionResult> UpdateRoom([FromBody] HotelRoom hotelRoom)
+        {
+            var UpdateRoom = await _service.UpdateRoom(hotelRoom);
+            return Ok(UpdateRoom);
+        }
+
+        [HttpPut("UpdateRate")]
+        public async Task<IActionResult> UpdateRate([FromBody] RoomRate roomRate)
+        {
+            var UpdateRate = await _service.UpdateRate(roomRate);
+            return Ok(UpdateRate);
+        }
+        [HttpDelete("DeleteHotel/{id}")]
         public async Task<IActionResult> DeleteHotel(int id)
         {
-            var hotel = await _context.Hotels.FindAsync(id);
-            if (hotel == null)
+            var hotel = await _service.DeleteHotel(id);
+            if(hotel == null)
             {
                 return NotFound();
             }
-
-            _context.Hotels.Remove(hotel);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok(hotel);
         }
 
-        private bool HotelExists(int id)
+        [HttpDelete("DeleteRoom/{id}")]
+        public async Task<IActionResult> DeleteRoom(int id)
         {
-            return _context.Hotels.Any(e => e.HotelId == id);
+            var hotelroom = await _service.DeleteRoom(id);
+            if (hotelroom == null)
+            {
+                return NotFound();
+            }
+            return Ok(hotelroom);
         }
+        [HttpDelete("DeleteRate/{id}")]
+        public async Task<IActionResult> DeleteRate(int id)
+        {
+            var roomrate = await _service.DeleteRate(id);
+            if (roomrate == null)
+            {
+                return NotFound();
+            }
+            return Ok(roomrate);
+        }
+
     }
 }
