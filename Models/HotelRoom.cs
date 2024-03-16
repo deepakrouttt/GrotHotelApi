@@ -1,6 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.SqlTypes;
+using System.Text.Json;
 
 namespace GrotHotelApi.Models
 {
@@ -49,13 +51,5 @@ namespace GrotHotelApi.Models
         public bool IsSingleEqualDouble { get; set; }
 
         public int HotelRoomId { get; set; }
-    }
-    public class BlackOutDate
-    {
-        [Key]
-        public int Id { get; set; }
-        public List<DateTime> ListDate { get; set; }
-
-        public int RoomRateId { get; set; }
     }
 }

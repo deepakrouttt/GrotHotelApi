@@ -15,11 +15,14 @@ namespace GrotHotelApi.HotelRepository.Services
         {
             _context = context;
         }
+
+        //Get Method
         public async Task<List<Hotel>> GetHotels()
         {
             var hotelList = await _context.Hotels.Include(m => m.HotelRooms).ToListAsync();
             return hotelList;
         }
+
         public async Task<Hotel> GetHotel(int id)
         {
             var hotel = await _context.Hotels.Include(m => m.HotelRooms).FirstOrDefaultAsync(m => m.HotelId == id);
@@ -31,12 +34,21 @@ namespace GrotHotelApi.HotelRepository.Services
             var hotelRoom = await _context.HotelRooms.Include(m => m.RoomRates).FirstOrDefaultAsync(m => m.HotelRoomId == id);
             return hotelRoom;
         }
+
         public async Task<RoomRate> GetRate(int id)
         {
             var roomRate = await _context.RoomRates.FirstOrDefaultAsync(m=>m.RoomRateId == id);
             return roomRate;
         }
 
+        public async Task<BlackOutDate> GetBlackOutDate(int id)
+        {
+            var blackOutdate = await _context.BlackOutDates.Include(m=>m.Dates).FirstOrDefaultAsync(m => m.RoomRateId == id);
+            return blackOutdate;
+        }
+
+
+        //Post Method
         public async Task<Hotel> addHotel(Hotel hotel)
         {
             _context.Hotels.Add(hotel);
@@ -59,6 +71,8 @@ namespace GrotHotelApi.HotelRepository.Services
             return roomRate;
         }
 
+
+        //Put Method
         public async Task<Hotel> UpdateHotel(Hotel hotel)
         {
             var Updatehotel = await _context.Hotels.Include(m => m.HotelRooms).FirstOrDefaultAsync(m => m.HotelId == hotel.HotelId);
@@ -95,6 +109,8 @@ namespace GrotHotelApi.HotelRepository.Services
             return obj;
         }
 
+
+        //Delete Method
         public async Task<Hotel> DeleteHotel(int id)
         {
             var hotel = await _context.Hotels.FindAsync(id);

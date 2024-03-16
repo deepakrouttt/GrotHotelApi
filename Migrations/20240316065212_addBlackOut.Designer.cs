@@ -4,6 +4,7 @@ using GrotHotelApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GrotHotelApi.Migrations
 {
     [DbContext(typeof(GrotHotelApiDbContext))]
-    partial class GrotHotelApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240316065212_addBlackOut")]
+    partial class addBlackOut
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,36 +33,17 @@ namespace GrotHotelApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("ListDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("RoomRateId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoomRateId")
-                        .IsUnique();
+                    b.HasIndex("RoomRateId");
 
                     b.ToTable("BlackOutDates");
-                });
-
-            modelBuilder.Entity("GrotHotelApi.Models.DateEntry", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("BlackOutDateId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BlackOutDateId");
-
-                    b.ToTable("DateEntries");
                 });
 
             modelBuilder.Entity("GrotHotelApi.Models.Hotel", b =>
@@ -183,17 +167,10 @@ namespace GrotHotelApi.Migrations
             modelBuilder.Entity("GrotHotelApi.Models.BlackOutDate", b =>
                 {
                     b.HasOne("GrotHotelApi.Models.RoomRate", null)
-                        .WithOne("BlackOutDate")
-                        .HasForeignKey("GrotHotelApi.Models.BlackOutDate", "RoomRateId")
+                        .WithMany("BlackOutDate")
+                        .HasForeignKey("RoomRateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("GrotHotelApi.Models.DateEntry", b =>
-                {
-                    b.HasOne("GrotHotelApi.Models.BlackOutDate", null)
-                        .WithMany("Dates")
-                        .HasForeignKey("BlackOutDateId");
                 });
 
             modelBuilder.Entity("GrotHotelApi.Models.HotelRoom", b =>
@@ -212,11 +189,6 @@ namespace GrotHotelApi.Migrations
                         .HasForeignKey("HotelRoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("GrotHotelApi.Models.BlackOutDate", b =>
-                {
-                    b.Navigation("Dates");
                 });
 
             modelBuilder.Entity("GrotHotelApi.Models.Hotel", b =>

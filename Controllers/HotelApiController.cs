@@ -17,10 +17,12 @@ namespace GrotHotelApi.Controllers
     public class HotelApiController : ControllerBase
     {
         private readonly IHotelService _service;
+        private readonly GrotHotelApiDbContext _context;
 
-        public HotelApiController(IHotelService service)
+        public HotelApiController(IHotelService service, GrotHotelApiDbContext context)
         {
             _service = service;
+            _context = context;
         }
 
         [HttpGet("GetHotels")]
@@ -64,6 +66,18 @@ namespace GrotHotelApi.Controllers
                 return NotFound();
             }
             return roomRate;
+        }
+
+        [HttpGet("GetBlackOutDate/{id}")]
+        public async Task<ActionResult<BlackOutDate>> GetBlackOutDate(int id)
+        {
+            var blackOutDate = await _service.GetBlackOutDate(id);
+
+            if (blackOutDate == null)
+            {
+                return NotFound();
+            }
+            return blackOutDate;
         }
         [HttpPost("addHotel")]
         public async Task<ActionResult> addHotel([FromBody] Hotel hotel)

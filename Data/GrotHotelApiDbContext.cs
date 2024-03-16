@@ -12,6 +12,7 @@ namespace GrotHotelApi.Data
         public virtual DbSet<HotelRoom> HotelRooms { get; set; }
         public virtual DbSet<RoomRate> RoomRates { get; set; }
         public virtual DbSet<BlackOutDate> BlackOutDates { get; set; }
+        public virtual DbSet<DateEntry> DateEntries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
