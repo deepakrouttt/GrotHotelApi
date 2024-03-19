@@ -9,6 +9,7 @@ using GrotHotelApi.Data;
 using GrotHotelApi.Models;
 using GrotHotelApi.Migrations;
 using GrotHotelApi.HotelRepository.IServices;
+using Newtonsoft.Json;
 
 namespace GrotHotelApi.Controllers
 {
@@ -17,12 +18,10 @@ namespace GrotHotelApi.Controllers
     public class HotelApiController : ControllerBase
     {
         private readonly IHotelService _service;
-        private readonly GrotHotelApiDbContext _context;
 
-        public HotelApiController(IHotelService service, GrotHotelApiDbContext context)
+        public HotelApiController(IHotelService service)
         {
             _service = service;
-            _context = context;
         }
 
         [HttpGet("GetHotels")]
@@ -69,7 +68,7 @@ namespace GrotHotelApi.Controllers
         }
 
         [HttpGet("GetBlackOutDate/{id}")]
-        public async Task<ActionResult<BlackOutDate>> GetBlackOutDate(int id)
+        public async Task<ActionResult> GetBlackOutDate(int id)
         {
             var blackOutDate = await _service.GetBlackOutDate(id);
 
@@ -77,7 +76,9 @@ namespace GrotHotelApi.Controllers
             {
                 return NotFound();
             }
-            return blackOutDate;
+            var ListDates = blackOutDate.Dates.Select(d => d.Date.ToString("yyyy-MM-dd")).ToList();
+
+            return Content(JsonConvert.SerializeObject(ListDates), "application/json");
         }
         [HttpPost("addHotel")]
         public async Task<ActionResult> addHotel([FromBody] Hotel hotel)
@@ -100,6 +101,13 @@ namespace GrotHotelApi.Controllers
             return Ok(rate);
         }
 
+        [HttpPost]
+        public async Task<ActionResult>addBlackOutDate(BlackOutDate date)
+        {
+            var blackOutDate = await _service.addBlackOutDate(date);
+            return Ok(blackOutDate);
+
+        }
 
         [HttpPut("UpdateHotel")]
         public async Task<IActionResult> UpdateHotel([FromBody] Hotel hotel)

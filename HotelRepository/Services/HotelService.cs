@@ -71,6 +71,13 @@ namespace GrotHotelApi.HotelRepository.Services
             return roomRate;
         }
 
+        public async Task<BlackOutDate> addBlackOutDate(BlackOutDate date)
+        {
+             _context.BlackOutDates.Add(date);
+            _context.SaveChanges();
+            return date;
+        }
+
 
         //Put Method
         public async Task<Hotel> UpdateHotel(Hotel hotel)

@@ -17,10 +17,15 @@ namespace GrotHotelApi
             builder.Services.AddDbContext<GrotHotelApiDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")));
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddScoped<IHotelService, HotelService>();
+            builder.Services.AddScoped<IBookingService,BookingService>();
+            builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
-
+            app.UseCors(policy => policy.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .SetIsOriginAllowed(origin => true)
+                        .AllowCredentials());
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

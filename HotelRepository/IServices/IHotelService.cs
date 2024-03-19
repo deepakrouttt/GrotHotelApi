@@ -14,6 +14,7 @@ namespace GrotHotelApi.HotelRepository.IServices
         Task<Hotel> addHotel(Hotel hotel);
         Task<Hotel> addRoom(HotelRoom hotelroom);
         Task<RoomRate> addRate(RoomRate roomRate);
+        Task<BlackOutDate> addBlackOutDate(BlackOutDate date);
 
         Task<Hotel> UpdateHotel(Hotel hotel);
         Task<HotelRoom> UpdateRoom(HotelRoom obj);

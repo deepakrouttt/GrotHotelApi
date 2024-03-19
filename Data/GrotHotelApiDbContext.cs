@@ -1,4 +1,5 @@
-﻿using GrotHotelApi.Models;
+﻿using GrotHotel.Models;
+using GrotHotelApi.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GrotHotelApi.Data
@@ -13,7 +14,8 @@ namespace GrotHotelApi.Data
         public virtual DbSet<RoomRate> RoomRates { get; set; }
         public virtual DbSet<BlackOutDate> BlackOutDates { get; set; }
         public virtual DbSet<DateEntry> DateEntries { get; set; }
-
+        public virtual DbSet<User>Users { get; set; }
+        public virtual DbSet<Booking>Bookings { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
