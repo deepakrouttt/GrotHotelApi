@@ -5,6 +5,6 @@ namespace GrotHotelApi.HotelRepository.IServices
 {
     public interface IBookingService
     {
-        Task<List<Hotel>> GetHotelsBySearch(Booking booking);
+        Task<HotelsWithRate> GetHotelsBySearch(Booking booking);
     }
 }

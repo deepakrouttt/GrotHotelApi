@@ -67,16 +67,16 @@ namespace GrotHotelApi.Controllers
             return roomRate;
         }
 
-        [HttpGet("GetBlackOutDate/{id}")]
-        public async Task<ActionResult> GetBlackOutDate(int id)
+        [HttpGet("GetBlackOutDate")]
+        public async Task<ActionResult> GetBlackOutDate()
         {
-            var blackOutDate = await _service.GetBlackOutDate(id);
+            var blackOutDate = await _service.GetBlackOutDate();
 
             if (blackOutDate == null)
             {
                 return NotFound();
             }
-            var ListDates = blackOutDate.Dates.Select(d => d.Date.ToString("yyyy-MM-dd")).ToList();
+            var ListDates = blackOutDate.SelectMany(b => b.Dates).Select(d => d.Date.ToString("yyyy-MM-dd")).ToList();
 
             return Content(JsonConvert.SerializeObject(ListDates), "application/json");
         }
@@ -101,10 +101,14 @@ namespace GrotHotelApi.Controllers
             return Ok(rate);
         }
 
-        [HttpPost]
-        public async Task<ActionResult>addBlackOutDate(BlackOutDate date)
+        [HttpPost("addBlackOutDate")]
+        public async Task<ActionResult>addBlackOutDate([FromBody]BlackOutDate date)
         {
             var blackOutDate = await _service.addBlackOutDate(date);
+            if (blackOutDate == null)
+            {
+                return Ok(null);
+            }
             return Ok(blackOutDate);
 
         }
@@ -150,6 +154,7 @@ namespace GrotHotelApi.Controllers
             }
             return Ok(hotelroom);
         }
+
         [HttpDelete("DeleteRate/{id}")]
         public async Task<IActionResult> DeleteRate(int id)
         {
@@ -160,6 +165,15 @@ namespace GrotHotelApi.Controllers
             }
             return Ok(roomrate);
         }
-
+        //[HttpDelete("DeleteBlackOutDate")]
+        //public async Task<ActionResult> DeleteBlackOutDate([FromBody]BlackOutDate date)
+        //{
+        //    var blackOutDate = await _service.DeleteBlackOutDate(date);
+        //    if (blackOutDate == null)
+        //    {
+        //        return Ok(null);
+        //    }
+        //    return Ok(blackOutDate);
+        //}
     }
 }
