@@ -79,6 +79,7 @@ namespace GrotHotelApi.Controllers
             var ListDates = blackOutDate.SelectMany(b => b.Dates).Select(d => d.Date.ToString("yyyy-MM-dd")).ToList();
 
             return Content(JsonConvert.SerializeObject(ListDates), "application/json");
+
         }
         [HttpPost("addHotel")]
         public async Task<ActionResult> addHotel([FromBody] Hotel hotel)
