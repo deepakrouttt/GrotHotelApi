@@ -24,5 +24,6 @@ namespace GrotHotelApi.HotelRepository.IServices
         Task<Hotel> DeleteHotel(int id);
         Task<HotelRoom> DeleteRoom(int id);
         Task<RoomRate> DeleteRate(int id);
+        Task<BlackOutDate> DeleteBlackOutDate(DateTime date);
     }
 }

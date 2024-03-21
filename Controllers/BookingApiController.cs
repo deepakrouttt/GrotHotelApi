@@ -17,7 +17,7 @@ namespace GrotHotelApi.Controllers
             _service = service;
         }
 
-        [HttpGet("GetHotelsBySearch")]
+        [HttpPost("GetHotelsBySearch")]
         public async Task<HotelsWithRate> GetHotelsBySearch([FromQuery]Booking booking)
         {
             var hotels = await _service.GetHotelsBySearch(booking);

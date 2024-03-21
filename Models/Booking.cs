@@ -4,7 +4,7 @@ namespace GrotHotel.Models
     public class Booking
     {
         [System.ComponentModel.DataAnnotations.Key]
-        public int BookingId { get; set; }
+        public int? BookingId { get; set; }
         [Required]
         public DateTime DateFrom { get; set; }
         [Required]
@@ -14,6 +14,6 @@ namespace GrotHotel.Models
 
         public int Children { get; set; }
 
-        public decimal Rate { get; set; }
+        public decimal? Rate { get; set; }
     }
 }

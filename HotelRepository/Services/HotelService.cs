@@ -37,13 +37,13 @@ namespace GrotHotelApi.HotelRepository.Services
 
         public async Task<RoomRate> GetRate(int id)
         {
-            var roomRate = await _context.RoomRates.FirstOrDefaultAsync(m=>m.RoomRateId == id);
+            var roomRate = await _context.RoomRates.FirstOrDefaultAsync(m => m.RoomRateId == id);
             return roomRate;
         }
 
         public async Task<List<BlackOutDate>> GetBlackOutDate()
         {
-            var blackOutdate = await _context.BlackOutDates.Include(m=>m.Dates).ToListAsync();
+            var blackOutdate = await _context.BlackOutDates.Include(m => m.Dates).ToListAsync();
             return blackOutdate;
         }
 
@@ -65,7 +65,7 @@ namespace GrotHotelApi.HotelRepository.Services
         }
 
         public async Task<RoomRate> addRate(RoomRate roomRate)
-        {   
+        {
             _context.RoomRates.Add(roomRate);
             await _context.SaveChangesAsync();
             return roomRate;
@@ -73,9 +73,21 @@ namespace GrotHotelApi.HotelRepository.Services
 
         public async Task<BlackOutDate> addBlackOutDate(BlackOutDate date)
         {
-             _context.BlackOutDates.Add(date);
+            var existingBlackOutDate = _context.BlackOutDates.Include(b => b.Dates)
+                                                     .FirstOrDefault(b => b.RoomRateId == date.RoomRateId);
+            if (existingBlackOutDate == null)
+            {
+                existingBlackOutDate = new BlackOutDate { RoomRateId = date.RoomRateId };
+                _context.BlackOutDates.Add(existingBlackOutDate);
+            }
+
+            foreach (var entry in date.Dates)
+            {
+                existingBlackOutDate.Dates.Add(entry);
+            }
+
             _context.SaveChanges();
-            return date;
+            return existingBlackOutDate;
         }
 
 
@@ -146,5 +158,26 @@ namespace GrotHotelApi.HotelRepository.Services
 
             return roomRate;
         }
+
+        public async Task<BlackOutDate> DeleteBlackOutDate(DateTime date)
+        {
+            var blackOutDate = await _context.BlackOutDates.Include(b => b.Dates)
+                .FirstOrDefaultAsync(b => b.Dates.Any(d => d.Date == date));
+
+            if (blackOutDate != null)
+            {
+                var dateEntryToRemove = blackOutDate.Dates.FirstOrDefault(d => d.Date == date);
+                blackOutDate.Dates.Remove(dateEntryToRemove);
+
+                if (!blackOutDate.Dates.Any())
+                {
+                    _context.BlackOutDates.Remove(blackOutDate);
+                }
+                await _context.SaveChangesAsync();
+            }
+
+            return blackOutDate;
+        }
     }
+
 }

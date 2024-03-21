@@ -109,7 +109,7 @@ namespace GrotHotelApi.Controllers
             {
                 return Ok(null);
             }
-            return Ok(blackOutDate);
+            return Ok("Date Added");
 
         }
 
@@ -165,15 +165,16 @@ namespace GrotHotelApi.Controllers
             }
             return Ok(roomrate);
         }
-        //[HttpDelete("DeleteBlackOutDate")]
-        //public async Task<ActionResult> DeleteBlackOutDate([FromBody]BlackOutDate date)
-        //{
-        //    var blackOutDate = await _service.DeleteBlackOutDate(date);
-        //    if (blackOutDate == null)
-        //    {
-        //        return Ok(null);
-        //    }
-        //    return Ok(blackOutDate);
-        //}
+
+        [HttpDelete("DeleteBlackOutDate")]
+        public async Task<ActionResult> DeleteBlackOutDate(DateTime date)
+        {
+            var blackOutDate = await _service.DeleteBlackOutDate(date);
+            if (blackOutDate == null)
+            {
+                return Ok(null);
+            }
+            return Ok("Date Deleted");
+        }
     }
 }

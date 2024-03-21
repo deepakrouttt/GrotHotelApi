@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GrotHotelApi.Models
 {
@@ -6,9 +7,15 @@ namespace GrotHotelApi.Models
     {
         [Key]
         public int Id { get; set; }
-        public ICollection<DateEntry> Dates { get; set; }
-
         public int RoomRateId { get; set; }
+
+        public virtual ICollection<DateEntry> Dates { get; set; }
+
+
+        public BlackOutDate()
+        {
+            Dates = new List<DateEntry>();
+        }
     }
 
     public class DateEntry
@@ -16,5 +23,10 @@ namespace GrotHotelApi.Models
         [Key]
         public int Id { get; set; }
         public DateTime Date { get; set; }
+
+        public int BlackOutDateId { get; set; } 
+
+        [ForeignKey("BlackOutDateId")]
+        public virtual BlackOutDate? BlackOutDate { get; set; }
     }
 }
