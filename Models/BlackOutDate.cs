@@ -26,7 +26,10 @@ namespace GrotHotelApi.Models
 
         public int BlackOutDateId { get; set; } 
 
-        [ForeignKey("BlackOutDateId")]
-        public virtual BlackOutDate? BlackOutDate { get; set; }
+    }
+    public class BlackoutData
+    {
+        public int Id { get; set; }
+        public List<string> BlackOutDates { get; set; }
     }
 }

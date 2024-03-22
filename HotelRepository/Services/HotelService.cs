@@ -41,10 +41,22 @@ namespace GrotHotelApi.HotelRepository.Services
             return roomRate;
         }
 
-        public async Task<List<BlackOutDate>> GetBlackOutDate()
+        public async Task<BlackoutData> GetBlackOutDate(int id)
         {
-            var blackOutdate = await _context.BlackOutDates.Include(m => m.Dates).ToListAsync();
-            return blackOutdate;
+            var blackOutDate = await _context.BlackOutDates.Include(m => m.Dates)
+                .FirstOrDefaultAsync(m => m.RoomRateId == id);
+            if (blackOutDate == null)
+            {
+                return null;
+            }
+            var ListDates = blackOutDate.Dates.Select(d => d.Date.ToString("yyyy-MM-dd")).ToList();
+
+            var result = new BlackoutData
+            {
+                Id = blackOutDate.RoomRateId,
+                BlackOutDates = ListDates
+            };
+            return result;
         }
 
 

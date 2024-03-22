@@ -67,20 +67,19 @@ namespace GrotHotelApi.Controllers
             return roomRate;
         }
 
-        [HttpGet("GetBlackOutDate")]
-        public async Task<ActionResult> GetBlackOutDate()
+        [HttpGet("GetBlackOutDate/{id}")]
+        public async Task<ActionResult> GetBlackOutDate(int id)
         {
-            var blackOutDate = await _service.GetBlackOutDate();
+            var blackOutDate = await _service.GetBlackOutDate(id);
 
             if (blackOutDate == null)
             {
                 return NotFound();
             }
-            var ListDates = blackOutDate.SelectMany(b => b.Dates).Select(d => d.Date.ToString("yyyy-MM-dd")).ToList();
 
-            return Content(JsonConvert.SerializeObject(ListDates), "application/json");
-
+            return Ok(blackOutDate);
         }
+
         [HttpPost("addHotel")]
         public async Task<ActionResult> addHotel([FromBody] Hotel hotel)
         {

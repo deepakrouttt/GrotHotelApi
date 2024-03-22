@@ -3,6 +3,10 @@ using GrotHotelApi.Data;
 using GrotHotelApi.HotelRepository.IServices;
 using GrotHotelApi.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GrotHotelApi.HotelRepository.Services
@@ -19,6 +23,11 @@ namespace GrotHotelApi.HotelRepository.Services
 
         public async Task<HotelsWithRate> GetHotelsBySearch(Booking booking)
         {
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve
+            };
+
             var hotelList = await _context.Hotels.Include(hotel => hotel.HotelRooms)
                 .ThenInclude(room => room.RoomRates).Where(hotel => hotel.HotelRooms.Any(room =>
                     room.RoomRates.Any(rate => rate.DateFrom <= booking.DateTo && rate.DateTo >=
@@ -32,12 +41,14 @@ namespace GrotHotelApi.HotelRepository.Services
                     ChildAgeRange = hotel.ChildAgeRange,
                     Description = hotel.Description,
                     Rating = hotel.Rating,
-                    HotelRooms = hotel.HotelRooms
-                    .Where(room => room.RoomRates != null && room.RoomRates.Any(rate =>
-                    rate.DateFrom <= booking.DateTo && rate.DateTo >= booking.DateFrom)).ToList()
+                    HotelRooms = hotel.HotelRooms.Where(room => room.RoomRates != null && 
+                    room.RoomRates.Any(rate => rate.DateFrom <= booking.DateTo && 
+                    rate.DateTo >= booking.DateFrom))
+                    .ToList()
                 })
             .ToListAsync();
 
+            var blackoutDate = await _context.BlackOutDates.Include(m=>m.Dates).ToListAsync();
 
             var dynamicHotelRates = hotelList.Select(hotel => new dynamicHotelRate
             {
@@ -48,8 +59,12 @@ namespace GrotHotelApi.HotelRepository.Services
                 {
                     DateFrom = rate.DateFrom,
                     DateTo = rate.DateTo,
-                    Rate = CalculateRate(rate, booking)
-                }))
+                    Rate = CalculateRate(rate, booking),
+                    RoomRateId = rate.RoomRateId,
+                    TotalRate = CalculateTotalRate(CalculateRate(rate, booking), booking,
+        blackoutDate.FirstOrDefault(bd => bd.RoomRateId == rate.RoomRateId)?.Dates?.ToList() ?? new List<DateEntry>())
+
+                })).ToList()
             }).ToList();
 
             return new HotelsWithRate { Hotels = dynamicHotelRates, numberAdults = booking.Adult };
@@ -83,6 +98,20 @@ namespace GrotHotelApi.HotelRepository.Services
                 childRate = booking.Children * rate.childRate;
             }
             return baseRate + childRate;
+        }
+
+        public decimal CalculateTotalRate(decimal rate, Booking booking, IEnumerable<DateEntry>? blackoutDates)
+        {
+            int numberOfDays = (booking.DateTo - booking.DateFrom).Days + 1;
+
+            var validDates = Enumerable.Range(0, numberOfDays)
+                .Select(offset => booking.DateFrom.AddDays(offset))
+                .Where(date => !blackoutDates.Any(b => b.Date == date))
+                .ToList();
+
+            decimal totalRate = validDates.Sum(date => rate);
+
+            return totalRate;
         }
 
 

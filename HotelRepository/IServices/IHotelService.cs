@@ -9,7 +9,7 @@ namespace GrotHotelApi.HotelRepository.IServices
         Task<Hotel> GetHotel(int id);
         Task<HotelRoom> GetRoom(int id);
         Task<RoomRate> GetRate(int id);
-        Task<List<BlackOutDate>> GetBlackOutDate();
+        Task<BlackoutData> GetBlackOutDate(int id);
 
         Task<Hotel> addHotel(Hotel hotel);
         Task<Hotel> addRoom(HotelRoom hotelroom);

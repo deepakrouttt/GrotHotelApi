@@ -7,5 +7,6 @@ namespace GrotHotelApi.HotelRepository.IServices
     {
         Task<HotelsWithRate> GetHotelsBySearch(Booking booking);
         decimal CalculateRate(RoomRate rate, Booking booking);
+        decimal CalculateTotalRate(decimal rate, Booking booking, IEnumerable<DateEntry>? blackoutDates);
     }
 }
