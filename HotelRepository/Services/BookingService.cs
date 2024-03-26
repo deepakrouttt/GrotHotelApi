@@ -60,16 +60,13 @@ namespace GrotHotelApi.HotelRepository.Services
                     DateFrom = rate.DateFrom,
                     DateTo = rate.DateTo,
                     Rate = CalculateRate(rate, booking),
-                    RoomRateId = rate.RoomRateId,
-                    TotalRate = CalculateTotalRate(CalculateRate(rate, booking), booking,
-        blackoutDate.FirstOrDefault(bd => bd.RoomRateId == rate.RoomRateId)?.Dates?.ToList() ?? new List<DateEntry>())
+                    RoomRateId = rate.RoomRateId
 
                 })).ToList()
             }).ToList();
 
-            return new HotelsWithRate { Hotels = dynamicHotelRates, numberAdults = booking.Adult };
+            return new HotelsWithRate { Hotels = dynamicHotelRates, numberAdults = booking.Adult,numberChild= booking.Children };
         }
-
 
         public decimal CalculateRate(RoomRate rate, Booking booking)
         {
@@ -99,22 +96,6 @@ namespace GrotHotelApi.HotelRepository.Services
             }
             return baseRate + childRate;
         }
-
-        public decimal CalculateTotalRate(decimal rate, Booking booking, IEnumerable<DateEntry>? blackoutDates)
-        {
-            int numberOfDays = (booking.DateTo - booking.DateFrom).Days + 1;
-
-            var validDates = Enumerable.Range(0, numberOfDays)
-                .Select(offset => booking.DateFrom.AddDays(offset))
-                .Where(date => !blackoutDates.Any(b => b.Date == date))
-                .ToList();
-
-            decimal totalRate = validDates.Sum(date => rate);
-
-            return totalRate;
-        }
-
-
 
     }
 }

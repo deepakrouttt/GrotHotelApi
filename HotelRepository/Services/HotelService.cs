@@ -95,6 +95,9 @@ namespace GrotHotelApi.HotelRepository.Services
 
             foreach (var entry in date.Dates)
             {
+                if(existingBlackOutDate.Dates.FirstOrDefault(a=> a.Date == date.Dates.FirstOrDefault().Date) !=null){
+                    break;
+                };
                 existingBlackOutDate.Dates.Add(entry);
             }
 
@@ -171,10 +174,10 @@ namespace GrotHotelApi.HotelRepository.Services
             return roomRate;
         }
 
-        public async Task<BlackOutDate> DeleteBlackOutDate(DateTime date)
+        public async Task<BlackOutDate> DeleteBlackOutDate(DateTime date,int id)
         {
             var blackOutDate = await _context.BlackOutDates.Include(b => b.Dates)
-                .FirstOrDefaultAsync(b => b.Dates.Any(d => d.Date == date));
+                .FirstOrDefaultAsync(b => b.Dates.Any(d => d.Date == date) && b.RoomRateId == id);
 
             if (blackOutDate != null)
             {

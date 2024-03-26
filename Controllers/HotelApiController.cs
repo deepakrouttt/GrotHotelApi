@@ -167,9 +167,9 @@ namespace GrotHotelApi.Controllers
         }
 
         [HttpDelete("DeleteBlackOutDate")]
-        public async Task<ActionResult> DeleteBlackOutDate(DateTime date)
+        public async Task<ActionResult> DeleteBlackOutDate(DateTime date,int id)
         {
-            var blackOutDate = await _service.DeleteBlackOutDate(date);
+            var blackOutDate = await _service.DeleteBlackOutDate(date,id);
             if (blackOutDate == null)
             {
                 return Ok(null);
