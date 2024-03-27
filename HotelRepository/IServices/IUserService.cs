@@ -7,5 +7,6 @@ namespace GrotHotelApi.HotelRepository.IServices
     {
         Task<List<User>> GetUsers();
         Task<TempUser> ValidateUser(LoginUser _login);
+        Task<User> RegisterUser(User user);
     }
 }

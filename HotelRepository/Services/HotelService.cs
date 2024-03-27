@@ -1,8 +1,6 @@
 ﻿using GrotHotelApi.Data;
 using GrotHotelApi.HotelRepository.IServices;
-using GrotHotelApi.Migrations;
 using GrotHotelApi.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace GrotHotelApi.HotelRepository.Services
@@ -85,23 +83,23 @@ namespace GrotHotelApi.HotelRepository.Services
 
         public async Task<BlackOutDate> addBlackOutDate(BlackOutDate date)
         {
-            var existingBlackOutDate = _context.BlackOutDates.Include(b => b.Dates)
-                                                     .FirstOrDefault(b => b.RoomRateId == date.RoomRateId);
+            var existingBlackOutDate =await _context.BlackOutDates.Include(b => b.Dates)
+                                                     .FirstOrDefaultAsync(b => b.RoomRateId == date.RoomRateId);
             if (existingBlackOutDate == null)
             {
                 existingBlackOutDate = new BlackOutDate { RoomRateId = date.RoomRateId };
                 _context.BlackOutDates.Add(existingBlackOutDate);
             }
-
             foreach (var entry in date.Dates)
             {
-                if(existingBlackOutDate.Dates.FirstOrDefault(a=> a.Date == date.Dates.FirstOrDefault().Date) !=null){
-                    break;
-                };
+                if (existingBlackOutDate.Dates.Any(a => a.Date == entry.Date))
+                {
+                    continue;
+                }
                 existingBlackOutDate.Dates.Add(entry);
             }
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();  
             return existingBlackOutDate;
         }
 

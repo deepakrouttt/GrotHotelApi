@@ -42,5 +42,12 @@ namespace GrotHotelApi.Controllers
             return Unauthorized();
         }
 
+        [HttpPost("Register")]
+        public async Task<User>Register ([FromBody]User user)
+        {
+            var User = await _service.RegisterUser(user);
+            return User;
+        }
+
     }
 }

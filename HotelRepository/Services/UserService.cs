@@ -21,6 +21,7 @@ namespace GrotHotelApi.HotelRepository.Services
         {
             return _context.Users.ToList();
         }
+
         public async Task<TempUser> ValidateUser(LoginUser _login)
         {
             var Isvalidate = _context.Users.Any(s => s.Username == _login.Username && s.Password == _login.Password);
@@ -34,6 +35,13 @@ namespace GrotHotelApi.HotelRepository.Services
                 }
             }
             return null;
+        }
+
+        public async Task<User> RegisterUser(User user)
+        {
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+            return user;
         }
     }
 }
